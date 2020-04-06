@@ -1,0 +1,61 @@
+Mongodb atlas account credentials : 
+email : pashwab255225@gmail.com
+password : qwerty_18
+
+API's and format :-
+
+1. localhost:3000/users/signup POST
+body : {
+	"password":"123",
+	"email":"neew@gmail.com",
+	"name":"pas3hsds",
+	}
+
+output : 201 created 
+	{
+    		"message": "User created successfully"
+	}
+
+2.localhost:3000/users/login POST
+body : {
+	"email":"new123@gmail.com",
+	"password":"ssf"
+	}
+
+output : {
+    		"message": "Login successfull",
+    		"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5ldzEyM0BnbWFpbC5jb20iLCJ1c2VyaWQiOiI1ZThiNTFmZmI0N2NkMTE1NzQ2NTEyYmIiLCJpYXQiOjE1ODYxODg4MjEsImV4cCI6MTU4NjE5MjQyMX0.YLNgfyItHcIT6msq_mhZ1Wj9tm1jUXQjcwfIlhSiTRQ"
+	}
+
+put the above token into Authorisation header.
+
+3.localhost:3000/users/5e8b516ab47cd115746512ba POST (/users/userId) userId : user id of user whom he wants to follow.
+
+
+
+4.localhost:3000/articles/newArticle -to create new article (put same token in authorisation header) POST
+body : {
+	"title" : "qqqqqqqqqqqqqqq",
+	"subtitle":"wwwwwwwwww",
+	"text" : "e",
+	"readingtime" : "2",
+	"author_id" : "5e8b852488e51d1224c1b411"
+	}
+
+5.like article : localhost:3000/articles/like    post
+
+body : {
+	"article_id" : "5e8b8cf3dd3bbd1b4c54199e"
+}
+
+6.comment article : localhost:3000/articles/comment    post
+
+body : {
+		
+	"article_id" : "5e8b8cf3dd3bbd1b4c54199e",
+	"author_id" : "5e8b852488e51d1224c1b411",
+	"comment" : "ho ho"
+	}
+
+7. to view a article : localhost:3000/articles/5e8b8cf3dd3bbd1b4c54199e (articleId)    GET 
+
