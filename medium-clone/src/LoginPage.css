@@ -1,0 +1,22 @@
+#root{
+    background-image:url("./assets/morocco-blue.png");
+    background-blend-mode: lighten;
+    background-repeat: repeat, repeat;
+    background-position: center center;
+    overflow: auto;
+    height: 100%;
+  }
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.card-body{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+#card{
+    justify-content: center;
+    width: 30%;
+}
