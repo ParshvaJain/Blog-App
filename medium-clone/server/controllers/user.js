@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../models/user'); 
 const Article = require('../models/article');
 
+
 const bcrypt =  require('bcryptjs');  //bcrypt - password hashing function
 const jwt = require('jsonwebtoken');
 //const passport = require("passport");
@@ -38,7 +39,8 @@ exports.user_signup = (req,res,next) => {
                     _id : new mongoose.Types.ObjectId(),
                     email : req.body.email,
                     password : hash,
-                    name : req.body.name
+                    name : req.body.name,
+                    userImage : req.file.path,
                 });
 
                 

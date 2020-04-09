@@ -5,6 +5,7 @@ const mongoose = require('mongoose') //creates an instance of mongoose class.On 
 const Userschema = mongoose.Schema({
     _id : mongoose.Schema.ObjectId,
     name : String,
+    userImage : {type: String , required : true},
     email : {type : String, required:true, 
         match : /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ },
     password : String,
