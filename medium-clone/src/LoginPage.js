@@ -47,7 +47,6 @@ class CardTemplate extends Component {
             else{
                 console.log("Valid User")
                 this.setState({message : "Login Successfull",color:"green"});
-                this.props.functioncall("hello")
             }
             })
 
@@ -97,7 +96,7 @@ class LoginPage extends Component{
                 <PageHeader/>
                 <br></br>
                 <br></br>
-                <CardTemplate functioncall={this.props.functioncall} type="Login" text="Not a Frequent Reader ?" hlinktext="Sign Up"/>
+                <CardTemplate  type="Login" text="Not a Frequent Reader ?" hlinktext="Sign Up"/>
             </React.Fragment>
                   
         )

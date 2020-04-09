@@ -2,29 +2,16 @@ import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
 
+
 import LoginPage from './LoginPage'
+import ViewArticle from './ViewArticle'
+
+
 
 class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      token: ""
-    }
-    this.addtoken = this.addtoken.bind(this);
-  }
-
-  addtoken(newtoken){
-    this.setState(
-      {
-        token :newtoken
-      }
-    )
-    console.log("called");
-  }
-  
   render() {
     return (
-      <LoginPage functioncall={this.addtoken} />
+      <ViewArticle articleId="5e8b8c9edd3bbd1b4c54199d"  />
       // <div className="App">
       //   <div className="App-header">
       //     <img src={logo} className="App-logo" alt="logo" />
