@@ -4,6 +4,7 @@ import './App.css';
 
 
 import LoginPage from './LoginPage'
+import SignupPage from './SignupPage'
 import ViewArticle from './ViewArticle'
 
 
@@ -11,7 +12,7 @@ import ViewArticle from './ViewArticle'
 class App extends Component {
   render() {
     return (
-      <ViewArticle articleId="5e8b8c9edd3bbd1b4c54199d"  />
+      <SignupPage></SignupPage>
       // <div className="App">
       //   <div className="App-header">
       //     <img src={logo} className="App-logo" alt="logo" />
