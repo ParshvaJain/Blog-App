@@ -12,16 +12,14 @@ let Articleschema = new mongoose.Schema({
     comments:[
         {
             authorname : {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'user'
+                type: String,
             },
         text : String
         }
     ],
     
     authorname : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'user'
+        type : String
     },
     
     date : Date,

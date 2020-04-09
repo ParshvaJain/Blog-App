@@ -3,7 +3,7 @@ const mongoose = require('mongoose') //creates an instance of mongoose class.On 
 
 //creating schema for Users.
 const Userschema = mongoose.Schema({
-    _id : mongoose.Schema.ObjectId,
+    _id : mongoose.Schema.Types.ObjectId,
     name : String,
     userImage : {type: String , required : true},
     email : {type : String, required:true, 

@@ -66,10 +66,14 @@ exports.clap_article = (req,res,next) => {
 exports.comment_article = (req,res,next) => {
     Article.findById(req.body.article_id)
     .then(res_article => {
-        return res_article.add_comment({
-            author : req.body.author_id,
-            text : req.body.comment
+        User.findById(req.body.author_id,function(err,user) {
+            user_found = user.name;
+            return res_article.add_comment({
+                authorname : user_found,
+                text : req.body.comment
+            })
         })
+        
         .then(() => {
             return res.status(200).json({
                 message : "Comment added"
@@ -87,17 +91,31 @@ exports.comment_article = (req,res,next) => {
 
 
 exports.get_article = (req,res,next) => {
-    Article.findById(req.params.id).populate('authorname').populate('comments.authorname')
+    Article.findById(req.params.id)
     .exec((err,art) => {
         if (err)
                 res.send(err)
             else if (!art)
-                res.send(404)
+                res.sendStatus(404)
             else
                 res.send(art)
     })
 }
 
+exports.get_all_article = (req,res,next) => {
+
+    console.log("in get_all");
+    Article.find({})
+    .exec((err,articles) => {
+
+        if(err)
+            res.send(err);
+        else if (!articles)
+            res.sendStatus(404);
+        else   
+            res.send(articles);        
+    })
+}
 
 
 

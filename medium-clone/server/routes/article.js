@@ -8,6 +8,6 @@ router.post('/newArticle',checkAuth,articleController.create_new_article);
 router.post('/like',checkAuth,articleController.clap_article);
 router.post('/comment',checkAuth,articleController.comment_article);
 router.get('/:id',checkAuth,articleController.get_article);
-
+router.get('/getAll',checkAuth,articleController.get_all_article);
 
 module.exports = router;
