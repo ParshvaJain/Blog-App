@@ -3,11 +3,12 @@ import PageHeader from './templates'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
-import InputGroup from 'react-bootstrap/InputGroup'
+// import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Col from 'react-bootstrap/Col'
 
 import "./LoginPage.css"
+import { Link } from 'react-router-dom'
 //import { response } from 'express';
 
 class CardTemplate extends Component {
@@ -57,7 +58,7 @@ class CardTemplate extends Component {
         }
 
         fetch('/users/signup',requestOptions).then(response=> response).then(response =>{
-            if(response.status == 409){
+            if(response.status === 409){
                 this.setState({
                     message:"An account with the user already exists",
                     color:"red",
@@ -65,7 +66,7 @@ class CardTemplate extends Component {
                     fileName:this.state.fileName
                 })
             }
-            else if(response.status == 201){
+            else if(response.status === 201){
                 this.setState({
                     message:"Account Successfully created",
                     color:"green",
@@ -128,7 +129,7 @@ class CardTemplate extends Component {
                     </Form>
                        
                 </Card.Body>
-                <Card.Footer className="text-muted">{this.props.text} <a> {this.props.hlinktext}</a></Card.Footer>
+                <Card.Footer className="text-muted">{this.props.text} <Link to={this.props.hlink}> {this.props.hlinktext}</Link></Card.Footer>
             </Card>
         </Container>
 )}
@@ -142,7 +143,7 @@ class SignupPage extends Component{
                 <PageHeader/>
                 <br></br>
                 <br></br>
-                <CardTemplate  type="Sign Up" text="Already a Reader " hlinktext="Login In"/>
+                <CardTemplate  type="Sign Up" text="Already a Reader " hlinktext="Login In" hlink="/"/>
             </React.Fragment>
                   
         )

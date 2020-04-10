@@ -3,11 +3,17 @@ import PageHeader from './templates'
 import Card from 'react-bootstrap/Card'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
-import InputGroup from 'react-bootstrap/InputGroup'
+
 import Form from 'react-bootstrap/Form'
 
 import "./LoginPage.css"
 //import { response } from 'express';
+
+import { Link } from 'react-router-dom'
+import {
+  withRouter
+} from 'react-router-dom'
+
 
 class CardTemplate extends Component {
 
@@ -22,11 +28,11 @@ class CardTemplate extends Component {
         this.verifyData = this.verifyData.bind(this)
     }
 
+
     verifyData(e){
         e.preventDefault();
         var email = document.getElementById("email").value;
         var pass = document.getElementById("password").value;
-        console.log(email,pass);
         this.sendRequest(email,pass);
        
     }
@@ -38,16 +44,21 @@ class CardTemplate extends Component {
             body : 'email='+email+'&password='+password
         }
 
-        fetch('/users/login',requestOptions).then(response=> {
-            console.log(response,response.status)
-            if(response.status == 401){
+        fetch('/users/login',requestOptions).then(response =>{
+            if(response.status === 401){
                 console.log("Invalid User");
                 this.setState({message : "Invalid User",color:"red"});
             }
             else{
-                console.log("Valid User")
                 this.setState({message : "Login Successfull",color:"green"});
+                return response.json()
             }
+            return null;
+            }).then( data => {
+                    if(data!=null){
+                        this.props.authFunction(data.token,data.userId,data.userName);
+                        this.props.history.push("/home");
+                    }
             })
 
 
@@ -66,12 +77,12 @@ class CardTemplate extends Component {
                 <Card.Body>
                     
                     <Form className="justify-content-center" onSubmit={this.verifyData}>
-                        <Form.Group controlId="formBasicEmail">
+                        <Form.Group>
                             <Form.Label>Email address</Form.Label>
                             <Form.Control id="email" type="email" placeholder="Enter email" required />
                         </Form.Group>
 
-                        <Form.Group controlId="formBasicPassword">
+                        <Form.Group>
                             <Form.Label>Password</Form.Label>
                             <Form.Control id="password" type="password" placeholder="Password" minLength='8' required />
                         </Form.Group>
@@ -82,7 +93,7 @@ class CardTemplate extends Component {
                     </Form>
                        
                 </Card.Body>
-                <Card.Footer className="text-muted">{this.props.text} <a> {this.props.hlinktext}</a></Card.Footer>
+                <Card.Footer className="text-muted">{this.props.text}<Link to={this.props.hlink}> {this.props.hlinktext}</Link></Card.Footer>
             </Card>
         </Container>
 )}
@@ -96,7 +107,7 @@ class LoginPage extends Component{
                 <PageHeader/>
                 <br></br>
                 <br></br>
-                <CardTemplate  type="Login" text="Not a Frequent Reader ?" hlinktext="Sign Up"/>
+                <CardTemplate {...this.props} authFunction={this.props.authFunction} history={this.props.history} type="Login" text="Not a Frequent Reader ?" hlinktext="Sign Up" hlink="/signup" />
             </React.Fragment>
                   
         )
@@ -108,4 +119,4 @@ class LoginPage extends Component{
 
 
 
-export default LoginPage
+export default withRouter(LoginPage);

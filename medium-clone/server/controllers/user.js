@@ -93,7 +93,9 @@ exports.user_login = (req,res,next) => {
                 //successfully logged in
                 return res.status(200).json({
                     message : "Login successfull",
-                    token : token
+                    token : token,
+                    userId:user[0]._id,
+                    userName:user[0].name
                 })
             }
 
