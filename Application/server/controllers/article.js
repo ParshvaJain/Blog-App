@@ -16,33 +16,47 @@ exports.create_new_article = (req,res,next) => {
       //  author_name = item.name
     //});
 
-    const new_article = new Article({
+    var user_id = req.body.authorId;
 
-        _id : new mongoose.Types.ObjectId(),
-        title : req.body.title,
-        subtitle : req.body.subtitle,
-        text:req.body.text,
-        readingtime : req.body.readingtime,
-        date : Date(),
-        authorname:'5e8b8b99bd08442a0c357152'
-    });
 
-    new_article.save((err,article) => {
+    User.findById(user_id,function(err,user) {
+        
         if(err)
-            res.send(err);
-
-        else if (!article)
-            res.send(400);
+           return res.send(err);
+        else if(!user)
+            return res.sendStatus(400);
         else{
-            console.log("there");
-            return article.add_author(req.body.author_id).then(
-                (_article) => {
-                    return res.send(_article);
-                }
-            )
-        }
 
-    })}
+            user_image_path = user.userImage;
+
+            const new_article = new Article({
+
+                _id : new mongoose.Types.ObjectId(),
+                title : req.body.title,
+                subtitle : req.body.subtitle,
+                text:req.body.text,
+                readingtime : req.body.readingtime,
+                date : Date(),
+                authorname:req.body.authorName,
+                userImage : user_image_path
+            });
+
+
+            new_article.save((err,article) => {
+                if(err)
+                    res.send(err);
+        
+                else if (!article)
+                    res.send(400);
+                else{
+                    console.log("there");
+                    return article;
+                }
+            })
+        }
+    });
+   
+}
 
 
 

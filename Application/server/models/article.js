@@ -22,6 +22,12 @@ let Articleschema = new mongoose.Schema({
         type : String
     },
     
+    tags : [
+        {
+        type : String
+        }
+    ],
+    userImage : String,
     date : Date,
     readingtime : String
 });
@@ -45,10 +51,6 @@ Articleschema.methods.get_article = function(id){
     })
 }
 
-Articleschema.methods.add_author = function (author_id) {
-    this.authorname = author_id
-    return this.save()
-}
 
 
 //calling the model constructor on the Mongoose instance and setting 'article' as reference to our 'ArticleSchema'.

@@ -20,7 +20,12 @@ const Userschema = mongoose.Schema({
     followers:[{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'user'
-    }]
+    }],
+    tags : [
+        {
+        type : String
+        }
+    ],
 });
 
 
