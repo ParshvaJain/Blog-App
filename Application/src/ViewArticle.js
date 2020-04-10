@@ -5,30 +5,40 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card'
 import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
+import { withRouter } from 'react-router';
 
 class ViewArticle extends Component {
 
     constructor(props){
         super(props);
+        var pathArray = this.props.location.pathname.split('/')
 
+        
         this.state = {
+            articleId:pathArray[pathArray.length -1],
             articleTitle :"",
             articleContent: "",
             articleSubtitle: "",
-            comments:[]
+            comments:[],
+            likes:0
         }
 
+        // console.log(this.state,pathArray[pathArray.length -1])
+        console.log(this.props)
         this.showData = this.showData.bind(this);
         this.showComments = this.showComments.bind(this);
+        this.likeArticle = this.likeArticle.bind(this);
     }
 
     showComments(){
         var ele = [];
         for(var i=0 ; i< this.state.comments.length; i++){
-            console.log(this.state.comments[i]);
+            // console.log(this.state.comments[i]);
             var comment = <InputGroup size="sm" className="mb-3" >
                             <InputGroup.Prepend>
-                                <InputGroup.Text id="basic-addon1">{this.state.comments[i].authorName}</InputGroup.Text>
+                                <InputGroup.Text style={{backgroundColor:'#34e2eb'}} id="basic-addon1">{this.state.comments[i].authorName}</InputGroup.Text>
                             </InputGroup.Prepend>
                             <Form.Control as="textarea" aria-label="Small"  placeholder={this.state.comments[i].text}  readOnly="readOnly" />
                           </InputGroup>
@@ -42,20 +52,31 @@ class ViewArticle extends Component {
         //console.log(data);
         this.setState(
                 {
+                    articleId:this.state.articleId,
                     articleTitle:data.title,
                     articleContent:data.text,
                     articleSubtitle:data.subtitle,
-                    comments:data.comments
+                    comments:data.comments,
+                    likes:data.likes
                 }
             )
     }
     componentDidMount(){
+
         var requestOptions = {
             method: "GET",
-            headers: { "Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imtra0BnbWFpbC5jb20iLCJ1c2VyaWQiOiI1ZThlMGViMGI3YWJhNzIyMTBhZDU5ZjciLCJpYXQiOjE1ODY0OTU5NzksImV4cCI6MTU4NjQ5OTU3OX0.uHF0zHZQeeNjudZTmO0bmIM2QCm1ZXmoRMLad7lQGWQ",
+            headers: { "Authorization":"Bearer " + this.props.getAuthToken(),
                         'Content-type': "application/x-www-form-urlencoded" }
         }
-        fetch("/articles/"+this.props.articleId,requestOptions).then(response=> response.json()).then(this.showData) 
+        fetch("/articles/"+this.state.articleId,requestOptions).then(response=> response.json()).then(this.showData) 
+    }
+
+    likeArticle(){
+
+
+
+
+
     }
 
     render(){
@@ -74,9 +95,27 @@ class ViewArticle extends Component {
                         </Card.Body>
                         <Card.Footer>
                             <Container>
-                                <h4>Comments</h4>
+                                <Container style={{display:"flex",justifyContent:"space-between"}}>
+                                    <h4>Comments</h4>
+                                    <div>
+                                        <ButtonGroup>
+                                            <Button variant="success" onClick={this.likeArticle}>Likes</Button>
+                                            <Button variant="warning" disabled  > {this.state.likes}</Button>
+                                        </ButtonGroup>
+                                        
+                                    </div>
+                                </Container>
                                 <br></br>
                                     {this.showComments()}
+                                    <InputGroup size="sm" className="mb-3" >
+                                        <InputGroup.Prepend>
+                                            <InputGroup.Text style={{backgroundColor:'#34e2eb'}} id="basic-addon1">{this.props.getUserName()}</InputGroup.Text>
+                                        </InputGroup.Prepend>
+                                        <Form.Control as="textarea" aria-label="Small"  placeholder="Write Your Comment here.."/>
+                                        <InputGroup.Append>
+                                            <Button variant="outline-secondary">Comment</Button>
+                                        </InputGroup.Append>
+                                    </InputGroup>
                             </Container>
                         </Card.Footer>
                     </Card>
@@ -88,6 +127,6 @@ class ViewArticle extends Component {
     }
 }
 
-export default ViewArticle;
+export default withRouter(ViewArticle);
 
 

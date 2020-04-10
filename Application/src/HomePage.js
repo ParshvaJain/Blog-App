@@ -4,6 +4,7 @@ import './LoginPage.css'
 
 import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container'
+import { Link } from 'react-router-dom'
 
 class BlogBanner extends Component {
 
@@ -11,19 +12,33 @@ class BlogBanner extends Component {
     //   var imageStyle ={
     //     display:"inline"
     //   }
-      var contentStyle = {
-        display:"inline-block"
+    //   var contentStyle = {
+
         
-      }
+    //   }
   
       return (
       <div>
         {/* <Image src={this.props.imagesrc} roundedCircle  style={imageStyle}/> */}
-        <div style={contentStyle}>
+        {/* <div style={contentStyle}>
           <h1>{this.props.blogTitle}</h1>
           <p>By-{this.props.authorName}</p>
           <p>{this.props.blogContent}</p>
-        </div>
+        </div> */}
+        <Link to={"/readArticle/" + this.props.blogId} style={{color:'inherit',textDecoration:'none'}}>
+            <Card style={{margin:"10px"}}>
+                <Card.Header>{this.props.blogTitle}</Card.Header>
+                <Card.Body>
+                    <Card.Text>
+                        {this.props.blogContent}
+                    </Card.Text>
+                </Card.Body>
+                {/* <Card.Footer>{this.authorName}</Card.Footer> */}
+
+
+
+            </Card>
+        </Link>
       </div>
       )
   
@@ -56,7 +71,7 @@ class HomePage extends Component {
 
         for(var i=0;i<data.length; i++){
             console.log(data.title);
-            var banner = <BlogBanner key={i} blogTitle={data[i].title} authorName={"kk"} blogContent={data[i].subtitle}/>
+            var banner = <BlogBanner key={i} blogId={data[i]._id} blogTitle={data[i].title} authorName={"kk"} blogContent={data[i].subtitle}/>
             BlogBannerList.push(banner);
         }
         
@@ -83,6 +98,7 @@ class HomePage extends Component {
             <br></br>
             <Container>
                 <Card>
+                    <Card.Header>Some Recommendations</Card.Header>
                     <Card.Body>    
                         {this.displayData()}
                     </Card.Body>
