@@ -30,15 +30,23 @@ class ViewArticle extends Component {
         this.showData = this.showData.bind(this);
         this.showComments = this.showComments.bind(this);
         this.likeArticle = this.likeArticle.bind(this);
+        this.addComment = this.addComment.bind(this);
+        this.fetchData = this.fetchData.bind(this);
     }
+
+    componentDidMount(){
+        this.fetchData();
+    }
+    
+
 
     showComments(){
         var ele = [];
         for(var i=0 ; i< this.state.comments.length; i++){
-            // console.log(this.state.comments[i]);
-            var comment = <InputGroup size="sm" className="mb-3" >
+            console.log(this.state.comments[i]);
+            var comment = <InputGroup  key={i} size="sm" className="mb-3" >
                             <InputGroup.Prepend>
-                                <InputGroup.Text style={{backgroundColor:'#34e2eb'}} id="basic-addon1">{this.state.comments[i].authorName}</InputGroup.Text>
+                                <InputGroup.Text style={{backgroundColor:'#34e2eb'}} id="basic-addon1">{this.state.comments[i].authorname}</InputGroup.Text>
                             </InputGroup.Prepend>
                             <Form.Control as="textarea" aria-label="Small"  placeholder={this.state.comments[i].text}  readOnly="readOnly" />
                           </InputGroup>
@@ -61,8 +69,8 @@ class ViewArticle extends Component {
                 }
             )
     }
-    componentDidMount(){
-
+    fetchData(){
+        console.log("fetch data called")
         var requestOptions = {
             method: "GET",
             headers: { "Authorization":"Bearer " + this.props.getAuthToken(),
@@ -72,9 +80,33 @@ class ViewArticle extends Component {
     }
 
     likeArticle(){
+        console.log("like article")
+        var requestOptions = {
+            method: "POST",
+            headers: { "Authorization":"Bearer " + this.props.getAuthToken(),
+                        'Content-type': "application/x-www-form-urlencoded" },
+            body:"article_id=" + this.state.articleId
+         }
+        fetch("/articles/like",requestOptions)
+            .then(response => response.json())
+            .then( data => { console.log(data)})
+            .then(this.fetchData);
+        
 
+    }
 
-
+    addComment(){
+        var comment = document.getElementById("commentarea").value;
+        var requestOptions = {
+            method: "POST",
+            headers: { "Authorization":"Bearer " + this.props.getAuthToken(),
+                        'Content-type': "application/x-www-form-urlencoded" },
+            body:"article_id=" + this.state.articleId + "&comment=" + comment + "&author_id=" + this.props.getUserId()
+        }
+        fetch("/articles/comment",requestOptions)
+            .then(response => response.json())
+            .then(data => {console.log(data)})
+            .then(this.fetchData)
 
 
     }
@@ -111,9 +143,9 @@ class ViewArticle extends Component {
                                         <InputGroup.Prepend>
                                             <InputGroup.Text style={{backgroundColor:'#34e2eb'}} id="basic-addon1">{this.props.getUserName()}</InputGroup.Text>
                                         </InputGroup.Prepend>
-                                        <Form.Control as="textarea" aria-label="Small"  placeholder="Write Your Comment here.."/>
+                                        <Form.Control id="commentarea" as="textarea" aria-label="Small"  placeholder="Write Your Comment here.."/>
                                         <InputGroup.Append>
-                                            <Button variant="outline-secondary">Comment</Button>
+                                            <Button variant="outline-secondary" onClick={this.addComment} >Comment</Button>
                                         </InputGroup.Append>
                                     </InputGroup>
                             </Container>
