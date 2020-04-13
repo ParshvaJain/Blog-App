@@ -4,11 +4,14 @@ import './LoginPage.css'
 import Image from 'react-bootstrap/Image'
 import Card from 'react-bootstrap/Card'
 import Container from 'react-bootstrap/Container'
-import { Link } from 'react-router-dom'
 import Col from 'react-bootstrap/Col'   
 import Row from 'react-bootstrap/Row'
 import {BlogBanner} from './HomePage'
-
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import InputGroup from 'react-bootstrap/InputGroup'
+import { text } from 'express'
 
 class ProfilePage extends Component{
   constructor(props){
@@ -23,6 +26,8 @@ class ProfilePage extends Component{
     this.fetchData = this.fetchData.bind(this);
     this.showArticles = this.showArticles.bind(this);
   }
+
+
 
   componentDidMount(){
     this.fetchData();
@@ -109,6 +114,7 @@ class ProfilePage extends Component{
                             <Col md={7}>
                                 <Container>
                                     <p>Email :{this.state.datafetched.email}</p>
+                                    <WriteArticle{... this.props}></WriteArticle>
                                 </Container>
                             </Col>    
                         </Row>    
@@ -128,6 +134,132 @@ class ProfilePage extends Component{
 
 
     }
+}
+
+
+class WriteArticle extends Component {
+    
+    constructor(props){
+        super(props);
+        this.state = {
+            showModal:false,
+            fileName:"Article"
+        };
+        this.handleClose = this.handleClose.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.saveArticle = this.saveArticle.bind(this);
+        this.updateLabel = this.updateLabel.bind(this);
+    }
+
+    saveArticle(event){
+        event.preventDefault();
+        let title = document.getElementById("title").value
+        let subTitle = document.getElementById("title").value
+        let tags = document.getElementById("tags").value
+        let file = document.getElementById("article")
+        var reader = new FileReader()
+        reader.readAsText(file.files[0])
+        reader.onload = function (){
+            var article = reader.result;
+            var data = {
+                title:title,
+                subtitle:subtitle,
+                text:article,
+                readingtime:2,
+                authorname:this.props.getUserName(),
+                authorId:this.props.getUserId(),
+            }
+            
+            var requestOptions ={
+                method:"POST",
+                headers:{"Authorization":"Bearer "+ this.props.getAuthToken()},
+                body:data    
+            }
+
+
+            fetch("/article/newArticle",re)
+
+
+            
+        }
+
+    }
+    
+    handleShow(){
+        this.setState({
+            showModal:true
+        })
+    }
+
+    
+    handleClose(){
+        this.setState({
+            showModal:false
+        })
+    }
+    
+    updateLabel(event){
+        this.setState({
+            fileName:event.target.files[0].name
+        })
+    }
+    
+    render(){
+        return (
+            <React.Fragment>
+                <Button variant="danger" onClick={this.handleShow}>
+                    Write Article
+                </Button>
+
+                <Modal show={this.state.showModal} onHide={this.handleClose}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Submit an Article</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group controlId="title" >
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control type="text" rows="3" required />
+                            </Form.Group>
+                            <Form.Group controlId="subtitle">
+                                <Form.Label>Subtitle</Form.Label>
+                                <Form.Control as="textarea" rows="3" required />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.File 
+                                    id="article"
+                                    label={this.state.fileName}
+                                    onChange ={this.updateLabel}
+                                    required
+                                    custom
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="tags">
+                                <Form.Label>Tags</Form.Label>
+                                <Form.Row>
+                                    <Col md={9}>
+                                        <Form.Control  label="" type="text" rows="2"></Form.Control>
+                                    </Col>
+                                    <Col md={3}>
+                                        <Button  variant="success">Generate</Button>
+                                    </Col>
+                                </Form.Row>
+                            </Form.Group>
+                            <Button variant="primary" type='submit' onClick={this.saveArticle}>
+                                Submit 
+                            </Button>
+                        
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="secondary" onClick={this.handleClose}>
+                        Close
+                    </Button>
+                    </Modal.Footer>
+                </Modal> 
+            </React.Fragment>
+        )
+        }
 }
 
 export default ProfilePage
