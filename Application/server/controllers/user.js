@@ -114,19 +114,6 @@ exports.user_login = (req,res,next) => {
 }
 
 
-
-exports.follow_user = (req,res,next) => {
-    User.findById(req.body.userId)
-    .then((user) => {
-        return user.follow(req.body.user_id)
-        .then(() => {
-            return res.status(200).json({
-                message:"followed successfully"
-            });
-        });
-    })
-}
-
 exports.getUser = (req,res,next) => {
     User.findById(req.params.userId).then((err,user) => {
         if (err)

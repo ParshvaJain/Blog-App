@@ -18,15 +18,9 @@ let Articleschema = new mongoose.Schema({
         }
     ],
     
-    authorname : {
-        type : String
-    },
-    
-    tags : [
-        {
-        type : String
-        }
-    ],
+    authorname : String,
+    authorId : String,
+    tags : String,
     userImage : String,
     date : Date,
     readingtime : String
