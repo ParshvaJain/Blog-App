@@ -8,7 +8,7 @@ import SignupPage from './SignupPage'
 import HomePage from './HomePage'
 import { Route, Switch } from 'react-router-dom'
 import ViewArticle from './ViewArticle';
-
+import ProfilePage from './ProfilePage';
 
 class App extends Component {
   constructor(props){
@@ -54,6 +54,7 @@ class App extends Component {
         <Route path="/signup" render={(props) => <SignupPage {...props} />} />
         <Route path="/home"   render={(props) => <HomePage  getAuthToken={this.getAuthToken} {...props} />} />
         <Route path="/readArticle/:id" render={(props) => <ViewArticle getAuthToken={this.getAuthToken} getUserId={this.getUserId} getUserName={this.getUserName} {...props} />} />
+        <Route path="/profile" render={(props) => <ProfilePage getAuthToken={this.getAuthToken} getUserId={this.getUserId} getUserName={this.getUserName} {...props} />} />
       </Switch>
     // <HomePage/>      
       // <ViewArticle articleId="5e27282ef1e4660ab82ed16d"/>

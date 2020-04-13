@@ -76,7 +76,18 @@ class ViewArticle extends Component {
             headers: { "Authorization":"Bearer " + this.props.getAuthToken(),
                         'Content-type': "application/x-www-form-urlencoded" }
         }
-        fetch("/articles/"+this.state.articleId,requestOptions).then(response=> response.json()).then(this.showData) 
+        fetch("/articles/"+this.state.articleId,requestOptions)
+            .then(response=> response.json())
+            .then(data =>{
+                if(data.message){
+                    console.log(data.message);
+                    this.props.history.push("/");
+                }
+                else{
+                    console.log("Data ",data)
+                    return this.showData(data);
+                }
+            })
     }
 
     likeArticle(){
