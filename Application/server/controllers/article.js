@@ -38,7 +38,8 @@ exports.create_new_article = (req,res,next) => {
                 readingtime : req.body.readingtime,
                 date : Date(),
                 authorname:req.body.authorName,
-                userImage : user_image_path
+                userImage : user_image_path,
+                authorId : req.body.authorId
             });
 
 
@@ -50,7 +51,7 @@ exports.create_new_article = (req,res,next) => {
                     res.send(400);
                 else{
                     console.log("there");
-                    return article;
+                    return res.send(article);
                 }
             })
         }
