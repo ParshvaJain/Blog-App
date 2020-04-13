@@ -2,13 +2,8 @@ const express = require('express');
 const app = express();  //creating new express application. 
 const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
-const expressSession = require('express-session')({
-  secret:'secret',
-  resave:false,
-  saveUninitialized:false
-});
-const passport = require('passport');
-var passportLocalMongoose = require("passport-local-mongoose");
+const textrazor = require('textrazor');
+
 
 //const cookieParser = require('cookie-parser'); //for creating and storing cookies
 //const passport = require('passport');
@@ -32,14 +27,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
 
-app.use(require("express-session")({    
-  secret:"Hello World, this is a session",    
-  resave: false,    
-  saveUninitialized: false
-}));
 
 
 

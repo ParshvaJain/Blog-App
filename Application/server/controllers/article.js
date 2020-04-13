@@ -1,6 +1,11 @@
 const Article = require('../models/article');  //importing articleSchema from models folder
 const mongoose = require('mongoose');
 
+const textrazor = require('textrazor');
+const textRazor = new textrazor('5888f197fc3fe4604873750e1879e9df8a2142d711a0be8aae4d1965');
+
+
+
 //var user_controller = require('./user');
 
 var User = require('../models/user');  //importing userSchema from models folder
@@ -132,6 +137,19 @@ exports.get_all_article = (req,res,next) => {
     })
 }
 
+exports.get_tags = (req,res,next) => {
 
+    content = req.body.text;
+
+    //removing double quotes from content
+
+    new_content = content.replace(/['"]+/g,'');
+
+    const options = { extractors: 'topics' }
+    textRazor.exec(new_content, options).then(result => 
+        res.send([result.response.topics[0].label,result.response.topics[1].label,result.response.topics[2].label,result.response.topics[3].label])
+     )
+    .catch(err => console.error(err))
+}
 
 
