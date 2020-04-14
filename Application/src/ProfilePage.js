@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import InputGroup from 'react-bootstrap/InputGroup'
-import { text } from 'express'
+import FormControl from 'react-bootstrap/FormControl'
 
 class ProfilePage extends Component{
   constructor(props){
@@ -20,7 +20,8 @@ class ProfilePage extends Component{
     this.state ={
         datafetched: {},
         imagesrc:"",
-        articles:""
+        articles:"",
+        numberofArticles:"",
     }
 
     this.fetchData = this.fetchData.bind(this);
@@ -38,9 +39,15 @@ class ProfilePage extends Component{
     var data = this.state.articles
     console.log(data)
     var BlogBannerList =[]
-
     for(var i=0;i<data.length; i++){
-        var banner = <BlogBanner key={i} blogId={data[i]._id} userImage={data[i].userImage} blogTitle={data[i].title} authorname={data[i].authorname} blogContent={data[i].subtitle}/>
+        var banner = <BlogBanner key={i} 
+                                 blogId={data[i]._id} 
+                                 userImage={data[i].userImage} 
+                                 blogTitle={data[i].title}
+                                 authorname={data[i].authorname} 
+                                 blogContent={data[i].subtitle}
+                                 tags={data[i].tags}
+                                 />
         BlogBannerList.push(banner);
     }
     
@@ -57,17 +64,23 @@ class ProfilePage extends Component{
     var articles = fetch("articles/getAll",requestOptions)
                         .then(response => response.json())
                         .then(data =>{
+                            var likes = 0;
+                            var comments = 0;
                             let article_list =[]
                             for(var i=0; i<data.length;i++){
                                 if(data[i].authorId == userId){
+                                    likes +=data[i].likes
+                                    comments +=data[i].comments.length
                                     article_list.push(data[i]);
                                 }
                             }
-                            this.setState({articles:article_list});
+                            this.setState({
+                                articles:article_list,
+                                likes:likes,
+                                comments:comments
+                            });
                             console.log(this.state);
                         });
-    console.log(articles)
-    return <p>hi!!</p>
   }
   fetchData(){
     var requestOptions = {
@@ -108,13 +121,46 @@ class ProfilePage extends Component{
                     <Card.Body>
                         <Row>
                             <Col md={5}>
-                            <Image style={{height:'200px'}} src={this.state.imagepath}  rounded></Image>
-                            <h4>{this.state.datafetched.name}</h4>
+                            <Container>
+                                <Image style={{height:'200px'}} src={this.state.imagepath}  rounded></Image>
+                                <Container><h4>{this.state.datafetched.name}</h4></Container>
+                            </Container>
                             </Col>
                             <Col md={7}>
                                 <Container>
-                                    <p>Email :{this.state.datafetched.email}</p>
-                                    <WriteArticle{... this.props}></WriteArticle>
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Prepend>
+                                    <InputGroup.Text id="email">
+                                        Email
+                                    </InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <FormControl id="basic-url" value={this.state.datafetched.email} aria-describedby="email" disabled/>
+                                </InputGroup>
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Prepend>
+                                    <InputGroup.Text id="email">
+                                        Number of Articles
+                                    </InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <FormControl id="basic-url" value={this.state.articles.length} aria-describedby="email" disabled/>
+                                </InputGroup>
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Prepend>
+                                    <InputGroup.Text id="email">
+                                        Total Likes
+                                    </InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <FormControl id="basic-url" value={this.state.likes} aria-describedby="email" disabled/>
+                                </InputGroup>
+                                <InputGroup className="mb-3">
+                                    <InputGroup.Prepend>
+                                    <InputGroup.Text id="email">
+                                        Total Comments
+                                    </InputGroup.Text>
+                                    </InputGroup.Prepend>
+                                    <FormControl id="basic-url" value={this.state.comments} aria-describedby="email" disabled/>
+                                </InputGroup>
+                                    <WriteArticle getAuthToken={this.props.getAuthToken} updateComponent={this.fetchData} getUserName={this.props.getUserName} getUserId={this.props.getUserId} ></WriteArticle>
                                 </Container>
                             </Col>    
                         </Row>    
@@ -143,12 +189,70 @@ class WriteArticle extends Component {
         super(props);
         this.state = {
             showModal:false,
-            fileName:"Article"
+            fileName:"Article",
+            message: "",
+            color:"",
+            article:"",
+            tags:[]
         };
         this.handleClose = this.handleClose.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.saveArticle = this.saveArticle.bind(this);
-        this.updateLabel = this.updateLabel.bind(this);
+        this.readArticle = this.readArticle.bind(this);
+        this.fetchTags = this.fetchTags.bind(this);
+        this.displayTags = this.displayTags.bind(this);
+        this.addTag = this.addTag.bind(this);
+        self = this;
+    }
+
+    displayTags(){
+        var tags = this.state.tags
+        var button_list = [];
+        if(tags.length != 0){
+            for(var i=0; i<tags.length; i++){
+                var button = <Button style={{margin:'5px'}} onClick={this.addTag} variant="outline-info" size="sm" >{tags[i]}</Button> ;
+                button_list.push(button);
+            }
+            return button_list;
+        }
+
+    }
+    addTag(event){
+        if(document.getElementById("tags").value == "")
+            document.getElementById("tags").value +=event.target.innerHTML
+        else
+            document.getElementById("tags").value +="," + event.target.innerHTML
+
+    }
+
+    fetchTags(){
+        if(this.state.article == ""){
+            this.setState({
+                message:"Please Upload the Article first",
+                color:"orange"                
+            })
+        }
+        else{
+            this.setState({
+                message:"",
+                color: ""
+            })
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("text",this.state.article);
+
+            var requestOptions ={
+                method:"POST",
+                headers:{"Authorization":"Bearer "+this.props.getAuthToken()},
+                body: urlencoded
+            }
+
+            fetch("/articles/getTags",requestOptions)
+                .then(response => response.json())
+                .then(data => this.setState({tags:data}));
+            
+        }
+
     }
 
     saveArticle(event){
@@ -156,32 +260,44 @@ class WriteArticle extends Component {
         let title = document.getElementById("title").value
         let subTitle = document.getElementById("title").value
         let tags = document.getElementById("tags").value
-        let file = document.getElementById("article")
-        var reader = new FileReader()
-        reader.readAsText(file.files[0])
-        reader.onload = function (){
-            var article = reader.result;
             var data = {
                 title:title,
-                subtitle:subtitle,
-                text:article,
+                subtitle:subTitle,
+                text:self.state.article,
                 readingtime:2,
-                authorname:this.props.getUserName(),
-                authorId:this.props.getUserId(),
+                authorname:self.props.getUserName(),
+                authorId:self.props.getUserId(),
             }
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("title", data.title);
+            urlencoded.append("subtitle", data.subtitle);
+            urlencoded.append("text",data.text)
+            urlencoded.append("authorId", data.authorId);
+            urlencoded.append("readingtime", data.readingtime);
+            urlencoded.append("authorName", data.authorname);
+            urlencoded.append("tags",tags);
             
             var requestOptions ={
                 method:"POST",
-                headers:{"Authorization":"Bearer "+ this.props.getAuthToken()},
-                body:data    
+                headers:{"Authorization":"Bearer "+ self.props.getAuthToken()},
+                body:urlencoded
             }
-
-
-            fetch("/article/newArticle",re)
+            fetch("/articles/newArticle",requestOptions)
+                .then(response => {
+                    var message = {}
+                    if(response.status == 200){
+                        console.log("SuccessFull");
+                        message = {message:"Successfully Saved",color:"green"};
+                    }
+                    else{
+                        message = {message:"Some Error Has Occured",color:"red"}
+                    }
+                    self.setState(message);
+                })
 
 
             
-        }
+
 
     }
     
@@ -194,14 +310,28 @@ class WriteArticle extends Component {
     
     handleClose(){
         this.setState({
-            showModal:false
+            showModal:false,
+            fileName:"Article",
+            message: "",
+            color:"",
+            article:"",
+            tags:[]
         })
+        console.log(this.props);
+        this.props.updateComponent();
     }
     
-    updateLabel(event){
-        this.setState({
-            fileName:event.target.files[0].name
-        })
+    readArticle(event){
+        var reader = new FileReader()
+        let file = document.getElementById("article")
+        reader.readAsText(file.files[0])
+        reader.onload = function (){
+            self.setState({
+                fileName:file.files[0].name,
+                article:reader.result
+            })
+        console.log(self.state);
+        }   
     }
     
     render(){
@@ -229,7 +359,7 @@ class WriteArticle extends Component {
                                 <Form.File 
                                     id="article"
                                     label={this.state.fileName}
-                                    onChange ={this.updateLabel}
+                                    onChange ={this.readArticle}
                                     required
                                     custom
                                 />
@@ -241,17 +371,23 @@ class WriteArticle extends Component {
                                         <Form.Control  label="" type="text" rows="2"></Form.Control>
                                     </Col>
                                     <Col md={3}>
-                                        <Button  variant="success">Generate</Button>
+                                        <Button  variant="success" onClick={this.fetchTags}>Generate</Button>
                                     </Col>
                                 </Form.Row>
                             </Form.Group>
+                            <Form.Group>
+                                {this.displayTags()}
+                            </Form.Group>
+                            <p style={{color:this.state.color}}>
+                                {this.state.message}
+                            </p>
                             <Button variant="primary" type='submit' onClick={this.saveArticle}>
                                 Submit 
                             </Button>
                         
                         </Form>
                     </Modal.Body>
-                    <Modal.Footer>
+                    <Modal.Footer >
                     <Button variant="secondary" onClick={this.handleClose}>
                         Close
                     </Button>

@@ -35,7 +35,6 @@ exports.create_new_article = (req,res,next) => {
             user_image_path = user.userImage;
 
             const new_article = new Article({
-
                 _id : new mongoose.Types.ObjectId(),
                 title : req.body.title,
                 subtitle : req.body.subtitle,
@@ -44,7 +43,8 @@ exports.create_new_article = (req,res,next) => {
                 date : Date(),
                 authorname:req.body.authorName,
                 userImage : user_image_path,
-                authorId : req.body.authorId
+                authorId : req.body.authorId,
+                tags:req.body.tags
             });
 
 

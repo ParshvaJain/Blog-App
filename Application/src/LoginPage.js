@@ -104,7 +104,7 @@ class LoginPage extends Component{
     render(){
         return (
             <React.Fragment>
-                <PageHeader/>
+                <PageHeader loginPage={true}/>
                 <br></br>
                 <br></br>
                 <CardTemplate {...this.props} authFunction={this.props.authFunction} history={this.props.history} type="Login" text="Not a Frequent Reader ?" hlinktext="Sign Up" hlink="/signup" />

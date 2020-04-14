@@ -20,18 +20,41 @@ class PageHeader extends Component {
     }
 
     render(){
+      if(this.props.loginPage== true)
+      {
+        return(
+          <Navbar bg="light">
+            <Navbar.Brand>ReadBlogs</Navbar.Brand>
+            {/* <Navbar.Collapse className="justify-content-end"> */}
+            {/* <Link to="/home">
+              <Button style={{margin:"10px"}}variant="outline-success">All Articles</Button>
+            </Link>
+            <Link to="/profile">
+              <Button variant="outline-success">Profile Page</Button>
+            </Link>
+            </Navbar.Collapse> */}
+          </Navbar>
+        )
 
 
-      return(
-        <Navbar bg="light">
-          <Navbar.Brand>TechBlogs</Navbar.Brand>
-          <Navbar.Collapse className="justify-content-end">
-          <Link to="/profile">
-            <Button variant="outline-success">Profile Page</Button>
-          </Link>
-          </Navbar.Collapse>
-        </Navbar>
-      )
+
+      }
+      else{
+
+        return(
+          <Navbar bg="light">
+            <Navbar.Brand>ReadBlogs</Navbar.Brand>
+            <Navbar.Collapse className="justify-content-end">
+            <Link to="/home">
+              <Button style={{margin:"10px"}}variant="outline-success">All Articles</Button>
+            </Link>
+            <Link to="/profile">
+              <Button variant="outline-success">Profile Page</Button>
+            </Link>
+            </Navbar.Collapse>
+          </Navbar>
+          )
+        } 
     }
   }
   

@@ -134,7 +134,7 @@ class ViewArticle extends Component {
                             <h5 className = "text-center" > {this.state.articleSubtitle}</h5>
                         </Card.Header>
                         <Card.Body style={{overflowY:'auto',maxHeight:screen.height}}>
-                            <Card.Text >{this.state.articleContent}</Card.Text>
+                            <Card.Text style={{whiteSpace: "pre-line"}} >{this.state.articleContent}</Card.Text>
                         </Card.Body>
                         <Card.Footer>
                             <Container>

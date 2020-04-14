@@ -7,6 +7,8 @@ import Container from 'react-bootstrap/Container'
 import { Link } from 'react-router-dom'
 import Col from 'react-bootstrap/Col'   
 import Row from 'react-bootstrap/Row'
+import Button from 'react-bootstrap/Button'
+
 
 var images = importAll(require.context('./../server/uploads'));
 // console.log(images.keys());
@@ -22,6 +24,26 @@ function importAll(r) {
 
 export class BlogBanner extends Component {
 
+    constructor(props){
+        super(props);
+        
+        this.displayTags = this.displayTags.bind(this);
+
+    }
+    displayTags(){
+
+        var tags = this.props.tags.split(",");
+        var button_list = [];
+        if(tags.length != 0){
+            for(var i=0; i<tags.length; i++){
+                var button = <Button style={{margin:'5px',float:"right"}} variant="outline-info" size="sm" >{tags[i]}</Button> ;
+                button_list.push(button);
+            }
+            return button_list;
+        }
+
+    }
+
     render(){
     //   var imageStyle ={
     //     display:"inline"
@@ -30,6 +52,7 @@ export class BlogBanner extends Component {
 
         
     //   }
+
   
       var imageid = this.props.userImage.split("\\")[1]
       console.log(imageid);
@@ -52,11 +75,14 @@ export class BlogBanner extends Component {
                 </Card.Body>
             <Card.Footer>
             <Row style={{pading:"5px"}}>
-                <Col xs={8} md={11}>
+                <Col md={1}>
+                    <Image style={{height:'40px'}}src={images[imageid]} rounded />
+                </Col>
+                <Col md={4} style={{margin:"auto",marginLeft:"0px",paddingLeft:"0px"}}>
                     {this.props.authorname}
                 </Col>
-                <Col xs={4} md={1}>
-                   <Image style={{height:'40px'}}src={images[imageid]} rounded />
+                <Col md={6}>
+                   {this.displayTags()}
                 </Col>
             </Row>
             </Card.Footer>
@@ -93,7 +119,14 @@ class HomePage extends Component {
         var BlogBannerList =[]
 
         for(var i=0;i<data.length; i++){
-            var banner = <BlogBanner key={i} blogId={data[i]._id} userImage={data[i].userImage} blogTitle={data[i].title} authorname={data[i].authorname} blogContent={data[i].subtitle}/>
+            var banner = <BlogBanner key={i} 
+                                     blogId={data[i]._id} 
+                                     userImage={data[i].userImage} 
+                                     blogTitle={data[i].title} 
+                                     authorname={data[i].authorname} 
+                                     blogContent={data[i].subtitle}
+                                     tags = {data[i].tags}
+                                     />
             BlogBannerList.push(banner);
         }
         
