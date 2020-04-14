@@ -27,13 +27,15 @@ class CardTemplate extends Component {
         this.onChangeHandler = this.onChangeHandler.bind(this)
     }
 
-    getData(e){
-        e.preventDefault();
+    getData(event){
+        console.log(event);
+        event.preventDefault();
+        event.stopPropagation();
         var email = document.getElementById("formBasicEmail").value;
         var pass = document.getElementById("formBasicPassword").value;
         var name = document.getElementById("firstName").value + " " + document.getElementById("secondName").value;
+
         this.sendRequest(email,pass,name);
-       
     }
 
     onChangeHandler(event){
@@ -46,6 +48,7 @@ class CardTemplate extends Component {
       }
 
     sendRequest(email,password,name){
+
         var fd = new FormData();
         fd.append("email",email);
         fd.append("password",password);
@@ -56,8 +59,9 @@ class CardTemplate extends Component {
             method : 'POST',
             body : fd
         }
-
-        fetch('/users/signup',requestOptions).then(response=> response).then(response =>{
+       console.log("hi")
+       fetch('/users/signup',requestOptions)
+            .then(response =>{
             if(response.status === 409){
                 this.setState({
                     message:"An account with the user already exists",
@@ -75,10 +79,10 @@ class CardTemplate extends Component {
                 })
             }
         })
-
-        
-
     }
+    
+
+    
     
 
     render(){
@@ -92,7 +96,7 @@ class CardTemplate extends Component {
                 <Card.Header>{this.props.type}</Card.Header>
                 <Card.Body>
                     
-                    <Form className="justify-content-center" onSubmit={this.getData} enctype="multipart/form-data">
+                    <Form className="justify-content-center" onSubmit={this.getData}>
                         <Form.Group>
                         <Form.Label>Full Name</Form.Label>
                             <Form.Row>
@@ -100,7 +104,7 @@ class CardTemplate extends Component {
                                     <Form.Control id="firstName" placeholder="First name"  required/>
                                 </Col>
                                 <Col>
-                                    <Form.Control id="SecondName" placeholder="Last name" />
+                                    <Form.Control id="secondName" placeholder="Last name" />
                                 </Col>
                             </Form.Row>
                         </Form.Group>
@@ -140,7 +144,7 @@ class SignupPage extends Component{
     render(){
         return (
             <React.Fragment>
-                <PageHeader/>
+                <PageHeader loginPage="true"/>
                 <br></br>
                 <br></br>
                 <CardTemplate  type="Sign Up" text="Already a Reader " hlinktext="Login In" hlink="/"/>

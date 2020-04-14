@@ -50,7 +50,7 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" render={(props) => <LoginPage {...props} getAuthToken={this.getAuthToken} authFunction={this.setAuth} /> }/>
+        <Route exact path="/login" render={(props) => <LoginPage {...props} getAuthToken={this.getAuthToken} authFunction={this.setAuth} /> }/>
         <Route path="/signup" render={(props) => <SignupPage {...props} />} />
         <Route path="/home"   render={(props) => <HomePage  getAuthToken={this.getAuthToken} {...props} />} />
         <Route path="/readArticle/:id" render={(props) => <ViewArticle getAuthToken={this.getAuthToken} getUserId={this.getUserId} getUserName={this.getUserName} {...props} />} />

@@ -20,7 +20,7 @@ class PageHeader extends Component {
     }
 
     render(){
-      if(this.props.loginPage== true)
+      if(this.props.loginPage== "true")
       {
         return(
           <Navbar bg="light">
