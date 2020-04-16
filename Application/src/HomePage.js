@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import Col from 'react-bootstrap/Col'   
 import Row from 'react-bootstrap/Row'
 import Button from 'react-bootstrap/Button'
-
+import RSSFeed from './rss'
 
 var images = importAll(require.context('./../server/uploads'));
 // console.log(images.keys());
@@ -36,7 +36,7 @@ export class BlogBanner extends Component {
         var button_list = [];
         if(tags.length != 0){
             for(var i=0; i<tags.length; i++){
-                var button = <Button style={{margin:'5px',float:"right"}} variant="outline-info" size="sm" >{tags[i]}</Button> ;
+                var button = <Button  key={i} style={{margin:'5px',float:"right"}} variant="outline-info" size="sm" >{tags[i]}</Button> ;
                 button_list.push(button);
             }
             return button_list;
@@ -162,9 +162,15 @@ class HomePage extends Component {
             <br></br>
             <Container>
                 <Card>
-                    <Card.Header>Some Recommendations</Card.Header>
+                    <Card.Header>Check Out these Articles</Card.Header>
                     <Card.Body>    
                         {this.displayData()}
+                    </Card.Body>
+                </Card>
+                <Card style={{marginTop:'5px'}}>
+                    <Card.Header>RSS Feed from Medium.com</Card.Header>
+                    <Card.Body>
+                        <RSSFeed></RSSFeed>
                     </Card.Body>
                 </Card>
             </Container>

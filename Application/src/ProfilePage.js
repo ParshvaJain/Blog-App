@@ -260,6 +260,13 @@ class WriteArticle extends Component {
         let title = document.getElementById("title").value
         let subTitle = document.getElementById("title").value
         let tags = document.getElementById("tags").value
+        if(title=="" || subTitle==""){
+            this.setState({
+                message:"Please Fill all the Fields",
+                color:"red"                
+            })
+        }
+        else {
             var data = {
                 title:title,
                 subtitle:subTitle,
@@ -296,7 +303,7 @@ class WriteArticle extends Component {
                 })
 
 
-            
+        }
 
 
     }
