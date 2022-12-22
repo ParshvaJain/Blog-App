@@ -9,7 +9,7 @@
     "bootstrap": "^4.4.1",
     "express": "^4.17.1",
     "history": "^4.10.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "keras-js": "^1.0.3",
     "mongoose": "^5.8.9",
     "prop-types": "^15.7.2",
